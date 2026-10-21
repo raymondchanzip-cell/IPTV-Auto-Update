@@ -53,12 +53,17 @@ def main():
     total = 0
     successful = 0
 
+    previous = parse_playlist(OUTPUT.read_text(encoding="utf-8-sig")) if OUTPUT.exists() else []
+    failed_regions = set()
+
     for region, url in SOURCES.items():
         print(f"正在更新：{region}")
 
         try:
             content = download(url)
             entries = parse_playlist(content)
+            if not content.lstrip("\ufeff").startswith("#EXTM3U") or not entries:
+                raise ValueError("來源不是有效或非空的 M3U")
             successful += 1
 
             for info, options, stream_url in entries:
@@ -99,6 +104,7 @@ def main():
             print(f"完成：{region}")
 
         except Exception as error:
+            failed_regions.add(region)
             print(f"更新失敗：{region}，原因：{error}")
 
     if successful == 0:
@@ -107,10 +113,24 @@ def main():
     if total == 0:
         raise RuntimeError("沒有取得任何頻道，保留舊播放列表")
 
-    OUTPUT.write_text(
+    # Preserve failed regions and the user's working Jade URL, including VLC options.
+    for info, options, stream_url in previous:
+        group = re.search(r'group-title="([^"]*)"', info)
+        is_jade = re.search(r'tvg-id="Jade\.hk(?:@[^"]*)?"', info, re.IGNORECASE)
+        if (group and group.group(1) in failed_regions) or is_jade:
+            if stream_url not in seen:
+                seen.add(stream_url)
+                playlist.extend([info, *options, stream_url])
+                total += 1
+
+    # Replace only after the complete playlist has been written successfully.
+    temporary = OUTPUT.with_suffix(".m3u.tmp")
+    temporary.write_text(
         "\n".join(playlist) + "\n",
         encoding="utf-8"
     )
+
+    temporary.replace(OUTPUT)
 
     print(f"更新完成！共 {total} 條直播源")
 
