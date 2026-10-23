@@ -83,6 +83,32 @@ def set_region(info, region):
     return re.sub(r'^(#EXTINF:[^ ,]+)', rf'\1 group-title="{region}"', info, count=1)
 
 
+NAME_MAP = {
+    "Beijing Satellite TV": "北京衛視",
+    "Anhui TV": "安徽衛視",
+    "Hunan TV": "湖南衛視",
+    "Jiangsu TV": "江蘇衛視",
+    "Zhejiang TV": "浙江衛視",
+    "Taiwan Television": "台視",
+    "Formosa Television": "民視",
+    "China Television": "中視",
+    "Chinese Television System": "華視",
+    "Public Television Service": "公視",
+}
+
+
+def localize_name(info, region):
+    if region not in ("中國大陸", "台灣"):
+        return info
+    head, sep, name = info.partition(",")
+    if not sep:
+        return info
+    for english, chinese in NAME_MAP.items():
+        if name == english or name.startswith(english + " ("):
+            return head + sep + chinese + name[len(english):]
+    return info
+
+
 def main():
     previous = parse_playlist(OUTPUT.read_text(encoding="utf-8-sig")) if OUTPUT.exists() else []
     groups = {}
@@ -101,7 +127,7 @@ def main():
         if len(group) >= max_sources:
             return
         seen_urls.add(stream_url)
-        entry = (set_region(info, region), options, stream_url)
+        entry = (localize_name(set_region(info, region), region), options, stream_url)
         if front:
             group.insert(0, entry)
         else:
