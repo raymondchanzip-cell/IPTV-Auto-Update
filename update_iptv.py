@@ -49,7 +49,7 @@ def channel_key(info, region):
     if match and match.group(1).strip():
         return (region, match.group(1).strip().lower())
     name = info.rsplit(",", 1)[-1].strip()
-    name = re.sub(r"\\s*\\(備用\\d+\\)$", "", name)
+    name = re.sub(r"\s*\(備用\d+\)$", "", name)
     return (region, name.casefold())
 
 
@@ -57,7 +57,7 @@ def set_region(info, region):
     if re.search(r'group-title="[^"]*"', info):
         return re.sub(r'group-title="[^"]*"', f'group-title="{region}"', info)
     # Keep the EXTINF duration immediately after the colon.
-    return re.sub(r'^(#EXTINF:[^ ,]+)', rf'\\1 group-title="{region}"', info, count=1)
+    return re.sub(r'^(#EXTINF:[^ ,]+)', rf'\1 group-title="{region}"', info, count=1)
 
 
 def main():
@@ -88,7 +88,7 @@ def main():
     for info, options, stream_url in previous:
         region_match = re.search(r'group-title="([^"]+)"', info)
         region = region_match.group(1) if region_match else None
-        if region == "香港" and re.search(r'tvg-id="Jade\\.hk(?:@[^"]*)?"', info, re.IGNORECASE):
+        if region == "香港" and re.search(r'tvg-id="Jade\.hk(?:@[^"]*)?"', info, re.IGNORECASE):
             add_entry(region, info, options, stream_url)
 
     for region, url in SOURCES.items():
@@ -96,7 +96,7 @@ def main():
         try:
             content = download(url)
             entries = parse_playlist(content)
-            if not content.lstrip("\\ufeff").startswith("#EXTM3U") or not entries:
+            if not content.lstrip("\ufeff").startswith("#EXTM3U") or not entries:
                 raise ValueError("來源不是有效或非空的 M3U")
             successful += 1
             for info, options, stream_url in entries:
@@ -120,7 +120,7 @@ def main():
     for entries in groups.values():
         for index, (info, options, stream_url) in enumerate(entries):
             if index:
-                info = re.sub(r"\\s*\\(備用\\d+\\)$", "", info)
+                info = re.sub(r"\s*\(備用\d+\)$", "", info)
                 info += f" (備用{index})"
             playlist.extend([info, *options, stream_url])
 
@@ -128,7 +128,7 @@ def main():
         raise RuntimeError("沒有取得任何頻道，保留舊播放列表")
 
     temporary = OUTPUT.with_suffix(".m3u.tmp")
-    temporary.write_text("\\n".join(playlist) + "\\n", encoding="utf-8")
+    temporary.write_text("\n".join(playlist) + "\n", encoding="utf-8")
     temporary.replace(OUTPUT)
     print(f"更新完成！共 {sum(len(v) for v in groups.values())} 條線路")
 
