@@ -11,6 +11,8 @@ SOURCES = {
     "美國": "https://iptv-org.github.io/iptv/countries/us.m3u",
 }
 
+HK_EXTRA_SOURCE = "https://raw.githubusercontent.com/ineed2underfit/hk-iptv/main/hk_live.m3u"
+
 OUTPUT = Path("IPTV.m3u")
 
 def download(url):
@@ -105,6 +107,19 @@ def main():
         except Exception as error:
             failed_regions.add(region)
             print(f"更新失敗：{region}，原因：{error}")
+
+    # Merge the additional Hong Kong playlist into the same IPTV.m3u output.
+    try:
+        print("正在同步香港補充播放列表")
+        extra_content = download(HK_EXTRA_SOURCE)
+        extra_entries = parse_playlist(extra_content)
+        if not extra_content.lstrip("\ufeff").startswith("#EXTM3U") or not extra_entries:
+            raise ValueError("香港補充來源無有效頻道")
+        for info, options, stream_url in extra_entries:
+            add_entry("香港", info, options, stream_url)
+        print(f"香港補充來源收到 {len(extra_entries)} 條線路")
+    except Exception as error:
+        print(f"香港補充來源更新失敗，原有頻道不受影響：{error}")
 
     if successful == 0:
         raise RuntimeError("所有直播源下載失敗，保留舊播放列表")
