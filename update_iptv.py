@@ -47,12 +47,33 @@ def parse_playlist(content):
     return entries
 
 def channel_key(info, region):
+    """Group different qualities and HK aliases under one channel."""
     match = re.search(r'tvg-id="([^"]+)"', info, re.IGNORECASE)
-    if match and match.group(1).strip():
-        return (region, match.group(1).strip().lower())
-    name = info.rsplit(",", 1)[-1].strip()
+    ident = match.group(1).strip().lower().split("@", 1)[0] if match else ""
+    name = info.rsplit(",", 1)[-1].strip().casefold()
     name = re.sub(r"\s*\(備用\d+\)$", "", name)
-    return (region, name.casefold())
+    compact = re.sub(r"[\s_-]+", "", name)
+    if region == "香港":
+        if ident == "jade.hk" or compact in {"翡翠台", "jade", "翡翠台81", "tvb翡翠台", "tvb翡翠台1080p"}:
+            return (region, "jade.hk")
+        if ident == "viutv.hk" or compact in {"viutv", "viutv99", "viutv99台", "viutv99臺"}:
+            return (region, "viutv.hk")
+        if ident == "pearl.hk" or compact in {"明珠台", "pearl", "tvb明珠台"}:
+            return (region, "pearl.hk")
+    if ident:
+        return (region, ident)
+    return (region, compact)
+
+
+def backup_info(info, index):
+    """Suffix the visible channel name, not the stream URL or EXTINF metadata."""
+    head, sep, name = info.partition(",")
+    if not sep:
+        return info
+    name = re.sub(r"\s*\(備用\d+\)$", "", name)
+    if index:
+        name += f" (備用{index})"
+    return head + sep + name
 
 
 def set_region(info, region):
@@ -135,8 +156,7 @@ def main():
     for entries in groups.values():
         for index, (info, options, stream_url) in enumerate(entries):
             if index:
-                info = re.sub(r"\s*\(備用\d+\)$", "", info)
-                info += f" (備用{index})"
+                info = backup_info(info, index)
             playlist.extend([info, *options, stream_url])
 
     if len(playlist) == 1:
