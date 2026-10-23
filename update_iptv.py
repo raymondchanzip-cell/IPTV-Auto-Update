@@ -9,9 +9,6 @@ SOURCES = {
     "澳門": "https://iptv-org.github.io/iptv/countries/mo.m3u",
     "台灣": "https://iptv-org.github.io/iptv/countries/tw.m3u",
     "美國": "https://iptv-org.github.io/iptv/countries/us.m3u",
-    "英國": "https://iptv-org.github.io/iptv/countries/uk.m3u",
-    "加拿大": "https://iptv-org.github.io/iptv/countries/ca.m3u",
-    "澳洲": "https://iptv-org.github.io/iptv/countries/au.m3u",
 }
 
 OUTPUT = Path("IPTV.m3u")
@@ -47,62 +44,64 @@ def parse_playlist(content):
 
     return entries
 
-def main():
-    playlist = ["#EXTM3U"]
-    seen = set()
-    total = 0
-    successful = 0
+def channel_key(info, region):
+    match = re.search(r'tvg-id="([^"]+)"', info, re.IGNORECASE)
+    if match and match.group(1).strip():
+        return (region, match.group(1).strip().lower())
+    name = info.rsplit(",", 1)[-1].strip()
+    name = re.sub(r"\\s*\\(備用\\d+\\)$", "", name)
+    return (region, name.casefold())
 
+
+def set_region(info, region):
+    if re.search(r'group-title="[^"]*"', info):
+        return re.sub(r'group-title="[^"]*"', f'group-title="{region}"', info)
+    # Keep the EXTINF duration immediately after the colon.
+    return re.sub(r'^(#EXTINF:[^ ,]+)', rf'\\1 group-title="{region}"', info, count=1)
+
+
+def main():
     previous = parse_playlist(OUTPUT.read_text(encoding="utf-8-sig")) if OUTPUT.exists() else []
+    groups = {}
+    seen_urls = set()
+    successful = 0
     failed_regions = set()
+    max_sources = 4
+
+    def add_entry(region, info, options, stream_url, front=False):
+        if region not in SOURCES or stream_url in seen_urls:
+            return
+        if re.search(r'tvg-country="(?:JP|KR)"', info, re.IGNORECASE):
+            return
+        key = channel_key(info, region)
+        group = groups.setdefault(key, [])
+        if len(group) >= max_sources:
+            return
+        seen_urls.add(stream_url)
+        entry = (set_region(info, region), options, stream_url)
+        if front:
+            group.insert(0, entry)
+        else:
+            group.append(entry)
+
+    # Prioritize previously working Jade URL, without restoring removed regions.
+    for info, options, stream_url in previous:
+        region_match = re.search(r'group-title="([^"]+)"', info)
+        region = region_match.group(1) if region_match else None
+        if region == "香港" and re.search(r'tvg-id="Jade\\.hk(?:@[^"]*)?"', info, re.IGNORECASE):
+            add_entry(region, info, options, stream_url)
 
     for region, url in SOURCES.items():
         print(f"正在更新：{region}")
-
         try:
             content = download(url)
             entries = parse_playlist(content)
-            if not content.lstrip("\ufeff").startswith("#EXTM3U") or not entries:
+            if not content.lstrip("\\ufeff").startswith("#EXTM3U") or not entries:
                 raise ValueError("來源不是有效或非空的 M3U")
             successful += 1
-
             for info, options, stream_url in entries:
-                # 按直播地址去重
-                if stream_url in seen:
-                    continue
-
-                # 排除明確標記為日本或韓國的頻道
-                if re.search(
-                    r'tvg-country="(?:JP|KR)"',
-                    info,
-                    re.IGNORECASE
-                ):
-                    continue
-
-                seen.add(stream_url)
-
-                # 使用地區名稱作為頻道分類
-                info = re.sub(
-                    r'group-title="[^"]*"',
-                    f'group-title="{region}"',
-                    info
-                )
-
-                if 'group-title="' not in info:
-                    info = info.replace(
-                        "#EXTINF:",
-                        f'#EXTINF: group-title="{region}" ',
-                        1
-                    )
-
-                playlist.append(info)
-                playlist.extend(options)
-                playlist.append(stream_url)
-
-                total += 1
-
+                add_entry(region, info, options, stream_url)
             print(f"完成：{region}")
-
         except Exception as error:
             failed_regions.add(region)
             print(f"更新失敗：{region}，原因：{error}")
@@ -110,29 +109,28 @@ def main():
     if successful == 0:
         raise RuntimeError("所有直播源下載失敗，保留舊播放列表")
 
-    if total == 0:
+    # Keep old channels from a region only when that region fails to update.
+    for info, options, stream_url in previous:
+        region_match = re.search(r'group-title="([^"]+)"', info)
+        region = region_match.group(1) if region_match else None
+        if region in failed_regions:
+            add_entry(region, info, options, stream_url)
+
+    playlist = ["#EXTM3U"]
+    for entries in groups.values():
+        for index, (info, options, stream_url) in enumerate(entries):
+            if index:
+                info = re.sub(r"\\s*\\(備用\\d+\\)$", "", info)
+                info += f" (備用{index})"
+            playlist.extend([info, *options, stream_url])
+
+    if len(playlist) == 1:
         raise RuntimeError("沒有取得任何頻道，保留舊播放列表")
 
-    # Preserve failed regions and the user's working Jade URL, including VLC options.
-    for info, options, stream_url in previous:
-        group = re.search(r'group-title="([^"]*)"', info)
-        is_jade = re.search(r'tvg-id="Jade\.hk(?:@[^"]*)?"', info, re.IGNORECASE)
-        if (group and group.group(1) in failed_regions) or is_jade:
-            if stream_url not in seen:
-                seen.add(stream_url)
-                playlist.extend([info, *options, stream_url])
-                total += 1
-
-    # Replace only after the complete playlist has been written successfully.
     temporary = OUTPUT.with_suffix(".m3u.tmp")
-    temporary.write_text(
-        "\n".join(playlist) + "\n",
-        encoding="utf-8"
-    )
-
+    temporary.write_text("\\n".join(playlist) + "\\n", encoding="utf-8")
     temporary.replace(OUTPUT)
-
-    print(f"更新完成！共 {total} 條直播源")
+    print(f"更新完成！共 {sum(len(v) for v in groups.values())} 條線路")
 
 if __name__ == "__main__":
     main()
