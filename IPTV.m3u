@@ -2,11 +2,11 @@
 #EXTINF:-1 tvg-id="Jade.hk@SD" tvg-logo="https://raw.githubusercontent.com/wanglindl/TVlogo/main/img/TVB1.png" group-title="香港",Jade (1080p)
 http://103.172.187.30:12000/stream/mytv/null-1/master.m3u8
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/翡翠台.png",翡翠台 (備用1)
-http://r.jdshipin.com/qClQf
-#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/翡翠台.png",翡翠台 (備用2)
-http://r.jdshipin.com/qrfbg
-#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/翡翠台.png",翡翠台 (備用3)
 http://r.jdshipin.com/62WM7
+#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/翡翠台.png",翡翠台 (備用2)
+http://r.jdshipin.com/n90gt
+#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/翡翠台.png",翡翠台 (備用3)
+http://r.jdshipin.com/GeWKr
 #EXTINF:-1 tvg-id="ABNChina.us@SD" tvg-logo="https://i.imgur.com/zagVLQH.png" group-title="中國大陸",ABN China (720p)
 https://mediaserver.abnvideos.com/streams/abnchina.m3u8
 #EXTINF:-1 tvg-id="AndoTV.cn@SD" tvg-logo="https://i.imgur.com/EpTsFVu.png" group-title="中國大陸",Ando TV (1080p)
@@ -3247,8 +3247,6 @@ https://fl1002.bozztv.com/gf-zarintv/index.m3u8
 https://live.zoomnews.info/live/Zoom_playlist.m3u8
 #EXTINF:-1 tvg-id="ZTV.us@SD" tvg-logo="https://zplay.cl/img/ztv.png" group-title="美國",ZTV (1080p)
 http://45.70.201.81:8000/play/a00u/index.m3u8
-#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/翡翠台4K.png",翡翠台4K
-http://cdn6.163189.xyz/163189/fct4k
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/翡翠台北美版.png",翡翠台北美版
 http://php.jdshipin.com:8880/TVOD/iptv.php?id=j1
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/無線新聞.png",無線新聞
@@ -3269,14 +3267,10 @@ http://r.jdshipin.com/vSJvl
 http://r.jdshipin.com/TcKr2
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/VIUTV.png",VIUTV (備用2)
 http://php.jdshipin.com/TVOD/iptv.php?id=viutv
-#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/VIUTV.png",VIUTV (備用3)
-http://php.jdshipin.com/TVOD/iptv.php?id=viutv2
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/HOY TV.png",HOY TV
 http://r.jdshipin.com/sFw4S
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/HOY TV.png",HOY TV (備用1)
 http://php.jdshipin.com/TVOD/iptv.php?id=hoytv
-#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/HOY78.png",HOY78
-http://cdn.163189.xyz/live/hoy/stream.m3u8
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/港台電視31 (官方).png",港台電視31 (官方)
 https://rthklive1-lh.akamaihd.net/i/rthk31_1@167495/index_2052_av-b.m3u8
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/港台電視32 (官方).png",港台電視32 (官方)
@@ -3285,5 +3279,3 @@ https://rthklive2-lh.akamaihd.net/i/rthk32_1@168450/index_2052_av-b.m3u8
 http://php.jdshipin.com:8880/TVOD/iptv.php?id=rthk31
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/RTHK32.png",RTHK32
 http://php.jdshipin.com:8880/TVOD/iptv.php?id=rthk32
-#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/NOW NEWS.png",NOW NEWS
-http://cdn.163189.xyz/163189/now
