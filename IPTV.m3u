@@ -4,9 +4,9 @@ http://103.172.187.30:12000/stream/mytv/null-1/master.m3u8
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/翡翠台.png",翡翠台 (備用1)
 http://r.jdshipin.com/qClQf
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/翡翠台.png",翡翠台 (備用2)
-http://r.jdshipin.com/62WM7
+http://r.jdshipin.com/qrfbg
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/翡翠台.png",翡翠台 (備用3)
-http://r.jdshipin.com/n90gt
+http://r.jdshipin.com/62WM7
 #EXTINF:-1 tvg-id="ABNChina.us@SD" tvg-logo="https://i.imgur.com/zagVLQH.png" group-title="中國大陸",ABN China (720p)
 https://mediaserver.abnvideos.com/streams/abnchina.m3u8
 #EXTINF:-1 tvg-id="AndoTV.cn@SD" tvg-logo="https://i.imgur.com/EpTsFVu.png" group-title="中國大陸",Ando TV (1080p)
@@ -3254,7 +3254,9 @@ http://php.jdshipin.com/TVOD/iptv.php?id=wxxw
 http://r.jdshipin.com/ZQ4kN
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/明珠台.png",明珠台 (備用1)
 http://r.jdshipin.com/jUx8K
-#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/明珠台.png",明珠台 (備用2)
+#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/TVB明珠台.png",TVB明珠台 (備用2)
+http://cdn9.163189.xyz/smt1.1.php?id=pearl_twn
+#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/明珠台.png",明珠台 (備用3)
 http://php.jdshipin.com/TVOD/iptv.php?id=mzt2
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/ViuTV.png",ViuTV
 http://r.jdshipin.com/vSJvl
