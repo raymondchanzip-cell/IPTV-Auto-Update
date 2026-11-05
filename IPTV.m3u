@@ -777,6 +777,8 @@ https://5ed325193d4e1.streamlock.net:444/LiveTV/KTVHD/playlist.m3u8
 http://media4.tripsmarter.com:1935/LiveTV/MTVHD/playlist.m3u8
 #EXTINF:-1 tvg-id="BeachTVPanamaCity.us@SD" tvg-logo="https://i.imgur.com/HCQDvEe.png" group-title="美國",Beach TV Panama City (720p)
 http://media4.tripsmarter.com:1935/LiveTV/BTVHD/playlist.m3u8
+#EXTINF:-1 tvg-id="beINSportsUSA.us@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/BeIN_Sports_logo_%28vertical_version%29.svg/500px-BeIN_Sports_logo_%28vertical_version%29.svg.png" group-title="美國",beIN Sports USA (576p)
+https://tvsen6.aynaott.com/beinsports/index.m3u8
 #EXTINF:-1 tvg-id="beINSPORTSXTRA.us@SD" tvg-logo="https://i.ibb.co/HT49GPmB/XTRA-2.png" group-title="美國",beIN SPORTS XTRA (1080p)
 https://bein-xtra-bein.amagi.tv/playlist.m3u8
 #EXTINF:-1 tvg-id="beINSPORTSXTRAenEspanol.us@SD" tvg-logo="https://i.imgur.com/V562tpO.png" group-title="美國",beIN SPORTS XTRA en Espanol (1080p)
@@ -3278,9 +3280,7 @@ http://php.jdshipin.com/TVOD/iptv.php?id=wxxw
 http://r.jdshipin.com/ZQ4kN
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/明珠台.png",明珠台 (備用1)
 http://r.jdshipin.com/jUx8K
-#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/TVB明珠台.png",TVB明珠台 (備用2)
-http://cdn9.163189.xyz/smt1.1.php?id=pearl_twn
-#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/明珠台.png",明珠台 (備用3)
+#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/明珠台.png",明珠台 (備用2)
 http://php.jdshipin.com/TVOD/iptv.php?id=mzt2
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/HOY TV.png",HOY TV
 http://r.jdshipin.com/sFw4S
@@ -3290,8 +3290,6 @@ http://php.jdshipin.com/TVOD/iptv.php?id=hoytv
 http://cdn.163189.xyz/live/hoy/stream.m3u8
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/港台電視31 (官方).png",港台電視31 (官方)
 https://rthklive1-lh.akamaihd.net/i/rthk31_1@167495/index_2052_av-b.m3u8
-#EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/RTHK TV 31 (港台電視31) (360p) [Geo-blocked].png",RTHK TV 31 (港台電視31) (360p) [Geo-blocked]
-https://rthklive1-lh.akamaihd.net/i/rthk31_1@167495/master.m3u8
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/港台電視32 (官方).png",港台電視32 (官方)
 https://rthklive2-lh.akamaihd.net/i/rthk32_1@168450/index_2052_av-b.m3u8
 #EXTINF:-1 group-title="香港" logo="https://epg.112114.xyz/logo/RTHK31.png",RTHK31
